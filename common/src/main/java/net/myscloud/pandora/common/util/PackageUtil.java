@@ -1,10 +1,3 @@
-/**
- * @Title: PackageUtil.java
- * @Package net.myscloud.pandora.utils
- * @Description: 
- * Copyright: Copyright (c) 2015 
- * Company:杭州点望科技有限公司
- */
 package net.myscloud.pandora.common.util;
 
 import java.io.File;
@@ -23,7 +16,7 @@ import java.util.jar.JarFile;
 public class PackageUtil {
 
 	/**
-	 * 获取某包下（包括该包的所有子包）�?有类
+	 * 获取某包下（包括该包的所有子包）所有类
 	 * 
 	 * @param packageName
 	 *            包名
@@ -64,7 +57,7 @@ public class PackageUtil {
 	}
 
 	/**
-	 * 从项目文件获取某包下�?有类
+	 * 从项目文件获取某包下所有类
 	 * 
 	 * @param filePath
 	 *            文件路径
@@ -152,12 +145,12 @@ public class PackageUtil {
 	}
 
 	/**
-	 * 从所有jar中搜索该包，并获取该包下�?有类
+	 * 从所有jar中搜索该包，并获取该包下所有类
 	 * 
 	 * @param urls
 	 *            URL集合
 	 * @param packagePath
-	 *            包路�?
+	 *            包路径
 	 * @param childPackage
 	 *            是否遍历子包
 	 * @return 类的完整名称
@@ -169,7 +162,7 @@ public class PackageUtil {
 			for (int i = 0; i < urls.length; i++) {
 				URL url = urls[i];
 				String urlPath = url.getPath();
-				// 不必搜索classes文件�?
+				// 不必搜索classes文件
 				if (urlPath.endsWith("classes/")) {
 					continue;
 				}

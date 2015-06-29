@@ -1,10 +1,3 @@
-/**
- * @Title: GsonUtil.java
- * @Package net.myscloud.pandora.utils
- * @Description: 
- * Copyright: Copyright (c) 2015 
- * Company:杭州点望科技有限公司
- */
 package net.myscloud.pandora.common.util;
 
 import com.google.gson.Gson;

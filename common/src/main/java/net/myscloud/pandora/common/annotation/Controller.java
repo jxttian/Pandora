@@ -1,10 +1,3 @@
-/**
- * @Title: Controller.java
- * @Package net.myscloud.pandora.controller.annotation
- * @Description: 
- * Copyright: Copyright (c) 2015 
- * Company:杭州点望科技有限公司
- */
 package net.myscloud.pandora.common.annotation;
 
 import java.lang.annotation.Documented;
