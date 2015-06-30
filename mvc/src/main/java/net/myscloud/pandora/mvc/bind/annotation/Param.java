@@ -1,4 +1,4 @@
-package net.myscloud.pandora.common.annotation;
+package net.myscloud.pandora.mvc.bind.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
