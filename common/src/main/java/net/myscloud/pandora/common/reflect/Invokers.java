@@ -21,11 +21,11 @@ public class Invokers {
 	/**
 	 * 调用器池
 	 */
-	final private static Map<Method, Invoker> INVOKER_MAP = new WeakHashMap<Method, Invoker>();
+	final private static Map<Method, Invoker> INVOKER_MAP = new WeakHashMap<>();
 	/**
 	 * 公共调用器池
 	 */
-	final private static Map<Integer, Invoker> PUBLIC_INVOKER_MAP = new WeakHashMap<Integer, Invoker>();
+	final private static Map<Integer, Invoker> PUBLIC_INVOKER_MAP = new WeakHashMap<>();
 
 	/**
 	 * 调用器接口
