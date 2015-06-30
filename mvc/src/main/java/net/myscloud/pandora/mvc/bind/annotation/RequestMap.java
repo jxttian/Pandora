@@ -1,6 +1,6 @@
 package net.myscloud.pandora.mvc.bind.annotation;
 
-import net.myscloud.pandora.common.enums.Method;
+import net.myscloud.pandora.mvc.bind.enums.Method;
 import net.myscloud.pandora.mvc.bind.enums.ResponseType;
 
 import java.lang.annotation.*;

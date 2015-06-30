@@ -1,4 +1,4 @@
-package net.myscloud.pandora.common.enums;
+package net.myscloud.pandora.mvc.bind.enums;
 
 import io.netty.handler.codec.http.HttpMethod;
 
