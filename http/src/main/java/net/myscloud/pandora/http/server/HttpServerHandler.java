@@ -44,7 +44,6 @@ import java.util.Map;
 
 import javassist.CtMethod;
 import javassist.bytecode.MethodInfo;
-import net.myscloud.pandora.common.annotation.Path;
 
 public class HttpServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
@@ -85,14 +84,14 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpRequest> 
 				return;
 			}
 			try {
-				Path path = (Path)method.getAnnotation(Path.class);
-				if (!path.method().getMethod().equals(request.method())) {
-					sendError(ctx, HttpResponseStatus.BAD_REQUEST);
-					return;
-				}
-				Map<String, List<String>> params = queryStringDecoder
-						.parameters();
-				MethodInfo methodInfo = method.getMethodInfo();
+//				Path path = (Path)method.getAnnotation(Path.class);
+//				if (!path.method().getMethod().equals(request.method())) {
+//					sendError(ctx, HttpResponseStatus.BAD_REQUEST);
+//					return;
+//				}
+//				Map<String, List<String>> params = queryStringDecoder
+//						.parameters();
+//				MethodInfo methodInfo = method.getMethodInfo();
 				System.out.println();
 //				List<Object> paras = new ArrayList<Object>();
 //				for (Parameter parameter : parameters) {

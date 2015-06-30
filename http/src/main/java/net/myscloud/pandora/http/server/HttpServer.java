@@ -15,6 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,9 +23,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import net.myscloud.pandora.common.annotation.Controller;
-import net.myscloud.pandora.common.annotation.Path;
-import net.myscloud.pandora.common.util.PackageUtil;
+import net.myscloud.pandora.common.reflect.util.PackageUtil;
 
 
 /**
@@ -60,35 +59,29 @@ public final class HttpServer {
 			if (classNames == null || classNames.size() == 0) {
 				return;
 			}
-			for (String className : classNames) {
-		        CtClass type = pool.get(className);  
-		        
-				if (!type.hasAnnotation(Controller.class)) {
-					continue;
-				}
-				
-				BEANMAP.put(type.getName(),type);
-				
-				for (CtMethod method : type.getMethods()) {
-					Path path=(Path)method.getAnnotation(Path.class);
-					if (path!=null) {
-						PATHMAP.put(path.value(), method);
-					}
-				}
-			}
+//			for (String className : classNames) {
+//		        CtClass type = pool.get(className);
+//				if (!type.hasAnnotation(Controller.class)) {
+//					continue;
+//				}
+//
+//				BEANMAP.put(type.getName(),type);
+//
+//				for (CtMethod method : type.getMethods()) {
+//					Path path=(Path)method.getAnnotation(Path.class);
+//					if (path!=null) {
+//						PATHMAP.put(path.value(), method);
+//					}
+//				}
+//			}
 		} catch (SecurityException
 				| IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
 
 	public static void main(String[] args) {
 		HttpServer httpServer = new HttpServer();
-		httpServer.start(80);
+		httpServer.start(8081);
 	}
 }
