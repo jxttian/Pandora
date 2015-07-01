@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 public class PackageUtil {
 
     private static final char PACKAGE_SEPARATOR_CHAR = '.';
-    private static final char FILE_SEPARATOR_CHAR = File.separatorChar;
+    private static final char FILE_SEPARATOR_CHAR = '/';
 
     /**
      * 获取某包下（包括该包的所有子包）所有类
@@ -37,13 +37,13 @@ public class PackageUtil {
     public static List<String> getClassName(String packageName,
                                             boolean childPackage) {
         List<String> fileNames = null;
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ClassLoader loader = PackageUtil.class.getClassLoader();
         String packagePath = packageName.replace(PACKAGE_SEPARATOR_CHAR, FILE_SEPARATOR_CHAR);
         URL url = loader.getResource(packagePath);
         if (url != null) {
             String type = url.getProtocol();
             if (type.equals("file")) {
-                fileNames = getClassNameByFile(url.getPath(),childPackage);
+                fileNames = getClassNameByFile(url.getPath(), childPackage);
             } else if (type.equals("jar")) {
                 fileNames = getClassNameByJar(url.getPath(), childPackage);
             }
@@ -61,8 +61,7 @@ public class PackageUtil {
      * @param childPackage 是否遍历子包
      * @return 类的完整名称
      */
-    private static List<String> getClassNameByFile(String filePath,
-                                                   boolean childPackage) {
+    private static List<String> getClassNameByFile(String filePath, boolean childPackage) {
         List<String> myClassName = new ArrayList<>();
         File file = new File(filePath);
         File[] childFiles = file.listFiles();
@@ -76,9 +75,9 @@ public class PackageUtil {
                 String childFilePath = childFile.getPath();
                 if (childFilePath.endsWith(".class")) {
                     childFilePath = childFilePath.substring(
-                            childFilePath.indexOf("classes") + 8,
+                            childFilePath.indexOf("classes") + "classes".length() + 1,
                             childFilePath.lastIndexOf(PACKAGE_SEPARATOR_CHAR));
-                    childFilePath = childFilePath.replace(FILE_SEPARATOR_CHAR, PACKAGE_SEPARATOR_CHAR);
+                    childFilePath = childFilePath.replace(File.separatorChar, PACKAGE_SEPARATOR_CHAR);
                     myClassName.add(childFilePath);
                 }
             }

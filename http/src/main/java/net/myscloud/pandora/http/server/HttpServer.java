@@ -32,8 +32,8 @@ import net.myscloud.pandora.common.reflect.util.PackageUtil;
  */
 public final class HttpServer {
 
-	public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<String, CtMethod>();
-	public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<String, Object>();
+	public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<>();
+	public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<>();
 
 	public void start(final int port) {
 		init();
