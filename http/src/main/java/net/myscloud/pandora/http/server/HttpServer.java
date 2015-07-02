@@ -1,8 +1,7 @@
 /**
  * @Title: HttpServer.java
  * @Package net.myscloud.pandora.http
- * @Description: 
- * Copyright: Copyright (c) 2015 
+ * @Description: Copyright: Copyright (c) 2015
  * Company:杭州点望科技有限公司
  */
 package net.myscloud.pandora.http.server;
@@ -24,6 +23,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import net.myscloud.pandora.common.reflect.util.PackageUtil;
+import net.myscloud.pandora.http.boot.PandoraBootstrap;
 
 
 /**
@@ -32,33 +32,33 @@ import net.myscloud.pandora.common.reflect.util.PackageUtil;
  */
 public final class HttpServer {
 
-	public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<>();
-	public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<>();
 
-	public void start(final int port) {
-		init();
-		try (EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-				EventLoopGroup workerGroup = new NioEventLoopGroup(100);) {
-			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup)
-					.channel(NioServerSocketChannel.class)
-					.handler(new LoggingHandler(LogLevel.INFO))
-					.childHandler(new HttpServerInitializer());
-			Channel ch = b.bind(port).sync().channel();
-			ch.closeFuture().sync();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void start(final int port) {
+//        init();
+        try (EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+             EventLoopGroup workerGroup = new NioEventLoopGroup(100)) {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new HttpServerInitializer());
+            Channel ch = b.bind(port).sync().channel();
+            ch.closeFuture().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void init() {
-		try {
-			ClassPool pool = ClassPool.getDefault();
-			String packageName = "net.myscloud";
-			List<String> classNames = PackageUtil.getClassName(packageName);
-			if (classNames == null || classNames.size() == 0) {
-				return;
-			}
+    public void init() {
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            String packageName = "net.myscloud";
+            List<String> classNames = PackageUtil.getClassName(packageName);
+            if (classNames == null || classNames.size() == 0) {
+                return;
+            }
 //			for (String className : classNames) {
 //		        CtClass type = pool.get(className);
 //				if (!type.hasAnnotation(Controller.class)) {
@@ -74,14 +74,16 @@ public final class HttpServer {
 //					}
 //				}
 //			}
-		} catch (SecurityException
-				| IllegalArgumentException e) {
-			e.printStackTrace();
-		} 
-	}
+        } catch (SecurityException
+                | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static void main(String[] args) {
-		HttpServer httpServer = new HttpServer();
-		httpServer.start(8081);
-	}
+    public static void main(String[] args) {
+//        HttpServer httpServer = new HttpServer();
+//        httpServer.start(8081);
+        PandoraBootstrap boot = new PandoraBootstrap();
+        boot.bind(80).setBossQuantity(1).setWorkerQuantity(100).start();
+    }
 }

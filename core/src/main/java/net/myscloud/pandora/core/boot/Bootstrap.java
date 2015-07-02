@@ -13,4 +13,6 @@ public interface Bootstrap {
     void status();
 
     Bootstrap init();
+
+    Bootstrap bind(int port);
 }
