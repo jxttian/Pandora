@@ -11,5 +11,16 @@
 
     <artifactId>pandora.http</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>net.myscloud</groupId>
+            <artifactId>pandora.core</artifactId>
+            <version>${pandora-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.myscloud</groupId>
+            <artifactId>pandora.common</artifactId>
+            <version>${pandora-version}</version>
+        </dependency>
+    </dependencies>
 </project>

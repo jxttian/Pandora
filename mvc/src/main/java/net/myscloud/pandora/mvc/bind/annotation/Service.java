@@ -1,6 +1,6 @@
 package net.myscloud.pandora.mvc.bind.annotation;
 
-import net.myscloud.pandora.core.boot.annotation.Component;
+import net.myscloud.pandora.core.annotation.Component;
 
 import java.lang.annotation.*;
 

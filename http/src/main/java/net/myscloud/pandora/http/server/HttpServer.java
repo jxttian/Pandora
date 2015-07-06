@@ -6,6 +6,9 @@
  */
 package net.myscloud.pandora.http.server;
 
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -13,17 +16,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 import javassist.ClassPool;
-import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.NotFoundException;
 import net.myscloud.pandora.common.reflect.util.PackageUtil;
 import net.myscloud.pandora.http.boot.PandoraBootstrap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -32,24 +30,10 @@ import net.myscloud.pandora.http.boot.PandoraBootstrap;
  */
 public final class HttpServer {
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<>();
-
-   /* public void start(final int port) {
-//        init();
-        try (EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-             EventLoopGroup workerGroup = new NioEventLoopGroup(100)) {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new HttpServerInitializer());
-            Channel ch = b.bind(port).sync().channel();
-            ch.closeFuture().sync();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void init() {
         try {
@@ -78,7 +62,7 @@ public final class HttpServer {
                 | IllegalArgumentException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     public static void main(String[] args) {
 //        HttpServer httpServer = new HttpServer();
