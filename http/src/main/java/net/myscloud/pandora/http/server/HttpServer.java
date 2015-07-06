@@ -35,7 +35,7 @@ public final class HttpServer {
     public static ConcurrentHashMap<String, CtMethod> PATHMAP = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String, Object> BEANMAP = new ConcurrentHashMap<>();
 
-    public void start(final int port) {
+   /* public void start(final int port) {
 //        init();
         try (EventLoopGroup bossGroup = new NioEventLoopGroup(1);
              EventLoopGroup workerGroup = new NioEventLoopGroup(100)) {
@@ -78,7 +78,7 @@ public final class HttpServer {
                 | IllegalArgumentException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static void main(String[] args) {
 //        HttpServer httpServer = new HttpServer();

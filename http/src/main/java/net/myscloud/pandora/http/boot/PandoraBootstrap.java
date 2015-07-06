@@ -53,7 +53,7 @@ public class PandoraBootstrap implements Bootstrap {
     }
 
     @Override
-    public Bootstrap init() {
+    public PandoraBootstrap init() {
 
         return this;
     }
@@ -73,6 +73,4 @@ public class PandoraBootstrap implements Bootstrap {
         this.workerQuantity = workerQuantity;
         return this;
     }
-
-
 }

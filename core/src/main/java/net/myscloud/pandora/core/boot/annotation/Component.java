@@ -1,4 +1,4 @@
-package net.myscloud.pandora.common.annotation;
+package net.myscloud.pandora.core.boot.annotation;
 
 import java.lang.annotation.*;
 
