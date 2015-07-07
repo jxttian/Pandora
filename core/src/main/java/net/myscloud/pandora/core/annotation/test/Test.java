@@ -8,6 +8,6 @@ import net.myscloud.pandora.core.annotation.Component;
 @Component
 public class Test {
     public void test(){
-        System.out.println("test");
+        System.out.println("do test");
     }
 }
