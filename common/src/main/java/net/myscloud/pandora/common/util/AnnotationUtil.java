@@ -13,32 +13,32 @@ import java.lang.reflect.Method;
 public final class AnnotationUtil extends AnnotationUtils {
     /**
      *判断Class是否有某一注解
-     * @param cls
-     * @param annotation
+     * @param clazz
+     * @param annotationType
      * @return
      */
-    public static boolean hasAnnotation(Class cls,Class annotation){
-        return findAnnotation(cls,annotation)!=null;
+    public static boolean hasAnnotation(Class clazz,Class annotationType){
+        return findAnnotation(clazz,annotationType)!=null;
     }
 
     /**
      * 判断Method是否有某一注解
      * @param method
-     * @param annotation
+     * @param annotationType
      * @return
      */
-    public static boolean hasAnnotation(Method method,Class annotation){
-        return method.getAnnotation(annotation)!=null;
+    public static boolean hasAnnotation(Method method,Class annotationType){
+        return method.getAnnotation(annotationType)!=null;
     }
 
     /**
      * 判断Field是否有某一注解
      * @param field
-     * @param annotation
+     * @param annotationType
      * @return
      */
-    public static boolean hasAnnotation(Field field,Class annotation){
-        return field.getAnnotation(annotation)!=null;
+    public static boolean hasAnnotation(Field field,Class annotationType){
+        return field.getAnnotation(annotationType)!=null;
     }
 
     public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
