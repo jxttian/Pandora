@@ -1,4 +1,4 @@
-package net.myscloud.pandora.common.reflect.util;
+package net.myscloud.pandora.common.util;
 
 import java.io.File;
 import java.net.URL;

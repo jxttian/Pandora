@@ -1,7 +1,7 @@
 package net.myscloud.pandora.core.bean;
 
 import com.google.common.base.Preconditions;
-import net.myscloud.pandora.common.reflect.util.PackageUtil;
+import net.myscloud.pandora.common.util.PackageUtil;
 import net.myscloud.pandora.common.util.AnnotationUtil;
 import net.myscloud.pandora.common.util.StringUtil;
 import net.myscloud.pandora.core.annotation.Component;
