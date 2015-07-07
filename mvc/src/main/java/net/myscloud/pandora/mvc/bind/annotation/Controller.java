@@ -10,8 +10,8 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Component
 @Documented
+@Component
 public @interface Controller {
 	String value() default "";
 }

@@ -12,7 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import javassist.ClassPool;
 import javassist.CtMethod;
 import net.myscloud.pandora.common.util.PackageUtil;
-import net.myscloud.pandora.http.boot.PandoraBootstrap;
+
+import net.myscloud.pandora.core.bean.DefaultBeanFactory;
+import net.myscloud.pandora.http.test.Test;
+import net.myscloud.pandora.http.test.Test2;
+import net.myscloud.pandora.http.test.Test3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,10 +61,15 @@ public final class HttpServer {
         }
     }
 
-    public static void main(String[] args) {
-//        HttpServer httpServer = new HttpServer();
-//        httpServer.start(8081);
-        PandoraBootstrap boot = new PandoraBootstrap();
-        boot.bind(80).setBossQuantity(1).setWorkerQuantity(100).start();
+    public static void main(String[] args) throws IllegalAccessException {
+//        PandoraBootstrap boot = new PandoraBootstrap();
+//        boot.bind(80).setBossQuantity(1).setWorkerQuantity(100).start();
+        DefaultBeanFactory factory = DefaultBeanFactory.create("net.myscloud");
+        Object obj1= factory.getInstance("Test");
+        ((Test)obj1).test();
+        Object obj2= factory.getInstance("Test2");
+        ((Test2)obj2).test();
+        Object obj3= factory.getInstance("Test3");
+        ((Test3)obj3).test();
     }
 }

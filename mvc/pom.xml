@@ -11,5 +11,12 @@
 
     <artifactId>pandora.mvc</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.myscloud</groupId>
+            <artifactId>pandora.core</artifactId>
+            <version>${pandora-version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
