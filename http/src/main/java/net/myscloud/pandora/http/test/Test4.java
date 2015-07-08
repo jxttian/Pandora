@@ -11,10 +11,10 @@ import net.myscloud.pandora.mvc.bind.annotation.Repository;
 public class Test4 {
 
     @Injective
-    private Test2 test;
+    private Test3 test;
 
     public void test(){
-        System.out.println("do test3");
+        System.out.println("do test4");
         test.test();
     }
 

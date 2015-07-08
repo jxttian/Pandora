@@ -14,12 +14,10 @@ import java.util.jar.JarFile;
  */
 public class PackageUtil {
 
-    private static final char PACKAGE_SEPARATOR_CHAR = '.';
-    private static final char FILE_SEPARATOR_CHAR = '/';
+
 
     /**
      * 获取某包下（包括该包的所有子包）所有类
-     *
      * @param packageName 包名
      * @return 类的完整名称
      */
@@ -29,7 +27,6 @@ public class PackageUtil {
 
     /**
      * 获取某包下所有类
-     *
      * @param packageName  包名
      * @param childPackage 是否遍历子包
      * @return 类的完整名称
@@ -38,7 +35,7 @@ public class PackageUtil {
                                             boolean childPackage) {
         List<String> fileNames = null;
         ClassLoader loader = PackageUtil.class.getClassLoader();
-        String packagePath = packageName.replace(PACKAGE_SEPARATOR_CHAR, FILE_SEPARATOR_CHAR);
+        String packagePath = packageName.replace(StringUtil.PACKAGE_SEPARATOR_CHAR, StringUtil.FILE_SEPARATOR_CHAR);
         URL url = loader.getResource(packagePath);
         if (url != null) {
             String type = url.getProtocol();
@@ -56,7 +53,6 @@ public class PackageUtil {
 
     /**
      * 从项目文件获取某包下所有类
-     *
      * @param filePath     文件路径
      * @param childPackage 是否遍历子包
      * @return 类的完整名称
@@ -76,8 +72,8 @@ public class PackageUtil {
                 if (childFilePath.endsWith(".class")) {
                     childFilePath = childFilePath.substring(
                             childFilePath.indexOf("classes") + "classes".length() + 1,
-                            childFilePath.lastIndexOf(PACKAGE_SEPARATOR_CHAR));
-                    childFilePath = childFilePath.replace(File.separatorChar, PACKAGE_SEPARATOR_CHAR);
+                            childFilePath.lastIndexOf(StringUtil.PACKAGE_SEPARATOR_CHAR));
+                    childFilePath = childFilePath.replace(File.separatorChar, StringUtil.PACKAGE_SEPARATOR_CHAR);
                     myClassName.add(childFilePath);
                 }
             }
@@ -88,7 +84,6 @@ public class PackageUtil {
 
     /**
      * 从jar获取某包下所有类
-     *
      * @param jarPath      jar文件路径
      * @param childPackage 是否遍历子包
      * @return 类的完整名称
@@ -98,7 +93,7 @@ public class PackageUtil {
                                                   boolean childPackage) {
         List<String> myClassName = new ArrayList<>();
         String[] jarInfo = jarPath.split("!");
-        String jarFilePath = jarInfo[0].substring(jarInfo[0].indexOf(FILE_SEPARATOR_CHAR));
+        String jarFilePath = jarInfo[0].substring(jarInfo[0].indexOf(StringUtil.FILE_SEPARATOR_CHAR));
         String packagePath = jarInfo[1].substring(1);
         try {
             JarFile jarFile = new JarFile(jarFilePath);
@@ -109,12 +104,12 @@ public class PackageUtil {
                 if (entryName.endsWith(".class")) {
                     if (childPackage) {
                         if (entryName.startsWith(packagePath)) {
-                            entryName = entryName.replace(FILE_SEPARATOR_CHAR, PACKAGE_SEPARATOR_CHAR).substring(
-                                    0, entryName.lastIndexOf(PACKAGE_SEPARATOR_CHAR));
+                            entryName = entryName.replace(StringUtil.FILE_SEPARATOR_CHAR, StringUtil.PACKAGE_SEPARATOR_CHAR).substring(
+                                    0, entryName.lastIndexOf(StringUtil.PACKAGE_SEPARATOR_CHAR));
                             myClassName.add(entryName);
                         }
                     } else {
-                        int index = entryName.lastIndexOf(FILE_SEPARATOR_CHAR);
+                        int index = entryName.lastIndexOf(StringUtil.FILE_SEPARATOR_CHAR);
                         String myPackagePath;
                         if (index != -1) {
                             myPackagePath = entryName.substring(0, index);
@@ -122,8 +117,8 @@ public class PackageUtil {
                             myPackagePath = entryName;
                         }
                         if (myPackagePath.equals(packagePath)) {
-                            entryName = entryName.replace(FILE_SEPARATOR_CHAR, PACKAGE_SEPARATOR_CHAR).substring(
-                                    0, entryName.lastIndexOf(PACKAGE_SEPARATOR_CHAR));
+                            entryName = entryName.replace(StringUtil.FILE_SEPARATOR_CHAR, StringUtil.PACKAGE_SEPARATOR_CHAR).substring(
+                                    0, entryName.lastIndexOf(StringUtil.PACKAGE_SEPARATOR_CHAR));
                             myClassName.add(entryName);
                         }
                     }
@@ -137,7 +132,6 @@ public class PackageUtil {
 
     /**
      * 从所有jar中搜索该包，并获取该包下所有类
-     *
      * @param urls         URL集合
      * @param packagePath  包路径
      * @param childPackage 是否遍历子包

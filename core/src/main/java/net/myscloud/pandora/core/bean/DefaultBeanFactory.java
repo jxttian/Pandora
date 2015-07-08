@@ -1,6 +1,7 @@
 package net.myscloud.pandora.core.bean;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import net.myscloud.pandora.common.util.PackageUtil;
 import net.myscloud.pandora.common.util.AnnotationUtil;
 import net.myscloud.pandora.common.util.StringUtil;
@@ -13,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by user on 2015/7/6.
@@ -22,8 +22,8 @@ public class DefaultBeanFactory {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private Map<String, BeanDefinition> beanMap = new ConcurrentHashMap<>();
-    private Map<String, BeanDefinition> beanTypeMap = new ConcurrentHashMap<>();
+    private Map<String, BeanDefinition> beanMap = Maps.newConcurrentMap();
+    private Map<String, BeanDefinition> beanTypeMap = Maps.newConcurrentMap();
 
     private static DefaultBeanFactory factory;
 
@@ -33,8 +33,9 @@ public class DefaultBeanFactory {
      * @param beanName
      * @return
      */
-    public Object getInstance(String beanName) {
-        return beanMap.get(beanName).getInstance();
+    public <T> T getInstance(String beanName) {
+        T result = (T) beanMap.get(beanName).getInstance();
+        return result;
     }
 
     /**
@@ -43,7 +44,7 @@ public class DefaultBeanFactory {
      * @param beanName
      * @return
      */
-    public Object getBeanClass(String beanName) {
+    public Class getBeanClass(String beanName) {
         return beanMap.get(beanName).getBeanClass();
     }
 
@@ -53,8 +54,9 @@ public class DefaultBeanFactory {
      * @param type
      * @return
      */
-    public Object getInstanceByType(String type) {
-        return beanTypeMap.get(type).getInstance();
+    public <T> T getInstanceByType(String type) {
+        T result = (T) beanTypeMap.get(type).getInstance();
+        return result;
     }
 
     /**
@@ -63,7 +65,7 @@ public class DefaultBeanFactory {
      * @param type
      * @return
      */
-    public Object getBeanClassByType(String type) {
+    public Class getBeanClassByType(String type) {
         return beanTypeMap.get(type).getBeanClass();
     }
 
@@ -128,14 +130,29 @@ public class DefaultBeanFactory {
             Field[] fields = beanClass.getDeclaredFields();
             for (Field field : fields) {
                 Injective injective = field.getAnnotation(Injective.class);
-                if (injective != null) {
-                    boolean isAccessible = field.isAccessible();
-                    field.setAccessible(true);
-                    field.set(beanDefinition.getInstance(), beanTypeMap.get(field.getGenericType().getTypeName()).getInstance());
-                    field.setAccessible(isAccessible);
+                if (injective == null) {
+                    //如果字段没有Injective注解，则不执行注入
+                    continue;
                 }
+                //
+                boolean isAccessible = field.isAccessible();
+                field.setAccessible(true);
+                BeanDefinition bean = beanTypeMap.get(field.getGenericType().getTypeName());
+                if (bean != null) {
+                    //如果在Map中找到相应的Bean，就注入
+                    field.set(beanDefinition.getInstance(), bean.getInstance());
+                }
+                field.setAccessible(isAccessible);
             }
         }
         LOGGER.info("Inject beans end");
+    }
+
+    public Map<String, BeanDefinition> getBeanMap() {
+        return beanMap;
+    }
+
+    public Map<String, BeanDefinition> getBeanTypeMap() {
+        return beanTypeMap;
     }
 }

@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * Created by user on 2015/7/6.
  */
-public final class AnnotationUtil extends AnnotationUtils {
+public final class AnnotationUtil{
     /**
      *判断Class是否有某一注解
      * @param clazz
@@ -41,6 +41,13 @@ public final class AnnotationUtil extends AnnotationUtils {
         return field.getAnnotation(annotationType)!=null;
     }
 
+    /**
+     * 查找某一注解
+     * @param clazz
+     * @param annotationType
+     * @param <A>
+     * @return
+     */
     public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
         A annotation = clazz.getAnnotation(annotationType);
         if (annotation != null) {

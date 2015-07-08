@@ -3,13 +3,13 @@ package net.myscloud.pandora.mvc.bind.enums;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
- * @ClassName: Method
+ * @ClassName: RequestMethod
  * @Description: 
  */
-public enum Method {
+public enum RequestMethod {
 	GET(HttpMethod.GET),POST(HttpMethod.POST),PUT(HttpMethod.PUT),DELETE(HttpMethod.DELETE);
 	private HttpMethod method;
-	Method(HttpMethod method){
+	RequestMethod(HttpMethod method){
 		this.method=method;
 	}
 	/**

@@ -7,6 +7,7 @@
 package net.myscloud.pandora.http.server;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javassist.ClassPool;
@@ -17,6 +18,9 @@ import net.myscloud.pandora.core.bean.DefaultBeanFactory;
 import net.myscloud.pandora.http.test.Test;
 import net.myscloud.pandora.http.test.Test2;
 import net.myscloud.pandora.http.test.Test3;
+import net.myscloud.pandora.http.test.Test4;
+import net.myscloud.pandora.mvc.bind.UrlBind;
+import net.myscloud.pandora.mvc.bind.method.MethodDetail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,11 +69,15 @@ public final class HttpServer {
 //        PandoraBootstrap boot = new PandoraBootstrap();
 //        boot.bind(80).setBossQuantity(1).setWorkerQuantity(100).start();
         DefaultBeanFactory factory = DefaultBeanFactory.create("net.myscloud");
-        Object obj1= factory.getInstance("Test");
-        ((Test)obj1).test();
-        Object obj2= factory.getInstance("Test2");
-        ((Test2)obj2).test();
-        Object obj3= factory.getInstance("Test3");
-        ((Test3)obj3).test();
+        UrlBind.init(factory);
+        Map<String, MethodDetail> urlMap=UrlBind.getUrlMap();
+        Test obj1= factory.getInstance("Test");
+        obj1.test();
+        Test2 obj2= factory.getInstance("Test2");
+        obj2.test();
+        Test3 obj3= factory.getInstance("Test3");
+        obj3.test();
+        Test4 obj4= factory.getInstance("Test4");
+        obj4.test();
     }
 }

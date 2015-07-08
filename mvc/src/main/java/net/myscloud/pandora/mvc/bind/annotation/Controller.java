@@ -1,6 +1,7 @@
 package net.myscloud.pandora.mvc.bind.annotation;
 
 import net.myscloud.pandora.core.annotation.Component;
+import net.myscloud.pandora.mvc.bind.enums.RequestMethod;
 
 import java.lang.annotation.*;
 
@@ -14,4 +15,5 @@ import java.lang.annotation.*;
 @Component
 public @interface Controller {
 	String value() default "";
+	RequestMethod method() default  RequestMethod.GET;
 }

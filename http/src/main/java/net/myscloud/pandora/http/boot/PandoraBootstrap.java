@@ -9,13 +9,14 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import net.myscloud.pandora.core.boot.Bootstrap;
 import net.myscloud.pandora.http.server.HttpServerInitializer;
+import net.myscloud.pandora.mvc.bind.UrlBind;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Created by user on 2015/7/2.
  */
-public class PandoraBootstrap implements Bootstrap {
+public final class PandoraBootstrap implements Bootstrap {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -27,7 +28,7 @@ public class PandoraBootstrap implements Bootstrap {
 
     @Override
     public void start() {
-        LOGGER.info("PandoraBootstrap Start with port:{},bossQuantity:{},workerQuantity:{}", port,bossQuantity,workerQuantity);
+        LOGGER.info("PandoraBootstrap Start with port:{},bossQuantity:{},workerQuantity:{}", port, bossQuantity, workerQuantity);
         try (EventLoopGroup bossGroup = new NioEventLoopGroup(bossQuantity);
              EventLoopGroup workerGroup = new NioEventLoopGroup(workerQuantity)) {
             ServerBootstrap b = new ServerBootstrap();
@@ -38,7 +39,7 @@ public class PandoraBootstrap implements Bootstrap {
             Channel ch = b.bind(port).sync().channel();
             ch.closeFuture().sync();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

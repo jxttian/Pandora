@@ -1,6 +1,6 @@
 package net.myscloud.pandora.mvc.bind.annotation;
 
-import net.myscloud.pandora.mvc.bind.enums.Method;
+import net.myscloud.pandora.mvc.bind.enums.RequestMethod;
 import net.myscloud.pandora.mvc.bind.enums.ResponseType;
 
 import java.lang.annotation.*;
@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface RequestMap {
 	String value() default "";
-	Method method() default  Method.GET;
+	RequestMethod method() default  RequestMethod.GET;
 	ResponseType responseType() default ResponseType.STRING;
 }
