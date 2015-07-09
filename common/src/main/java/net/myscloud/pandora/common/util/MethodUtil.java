@@ -1,6 +1,5 @@
 package net.myscloud.pandora.common.util;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javassist.*;
 import javassist.bytecode.CodeAttribute;
