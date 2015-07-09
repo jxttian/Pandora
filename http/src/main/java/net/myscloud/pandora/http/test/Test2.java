@@ -15,6 +15,10 @@ public class Test2 {
     private Test test;
 
     @RequestMap("user")
+    public void test(String test,String test5,String test3,String test4){
+        System.out.println("do test2");
+    }
+
     public void test(){
         System.out.println("do test2");
         test.test();

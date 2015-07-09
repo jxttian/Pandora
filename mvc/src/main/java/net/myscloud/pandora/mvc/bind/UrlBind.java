@@ -2,6 +2,7 @@ package net.myscloud.pandora.mvc.bind;
 
 import com.google.common.collect.Maps;
 import net.myscloud.pandora.common.util.AnnotationUtil;
+import net.myscloud.pandora.common.util.MethodUtil;
 import net.myscloud.pandora.core.bean.BeanDefinition;
 import net.myscloud.pandora.core.bean.DefaultBeanFactory;
 import net.myscloud.pandora.mvc.bind.annotation.Controller;
@@ -39,6 +40,7 @@ public final class UrlBind {
                 methodDetail.setUrl(baseUrl + url);
                 methodDetail.setMethod(method);
                 methodDetail.setRequestMethod(requestMethod);
+                methodDetail.setParamsMap(MethodUtil.getMethodParameterName(method));
                 urlMap.put(methodDetail.getUrl(),methodDetail);
             }
         }

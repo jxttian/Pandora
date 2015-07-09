@@ -3,6 +3,7 @@ package net.myscloud.pandora.mvc.bind.method;
 import net.myscloud.pandora.mvc.bind.enums.RequestMethod;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Created by user on 2015/7/8.
@@ -11,6 +12,7 @@ public class MethodDetail {
     private String url;
     private Method method;
     private RequestMethod requestMethod;
+    private Map<String, Class> paramsMap;
 
     public String getUrl() {
         return url;
@@ -34,5 +36,13 @@ public class MethodDetail {
 
     public void setRequestMethod(RequestMethod requestMethod) {
         this.requestMethod = requestMethod;
+    }
+
+    public Map<String, Class> getParamsMap() {
+        return paramsMap;
+    }
+
+    public void setParamsMap(Map<String, Class> paramsMap) {
+        this.paramsMap = paramsMap;
     }
 }

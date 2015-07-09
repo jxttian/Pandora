@@ -15,25 +15,13 @@ import java.util.Map;
 /**
  * Created by user on 2015/7/9.
  */
-public class MethodUtil {
+public final class MethodUtil {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void main(String[] args) {
-        Class clazz = MethodUtil.class;
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
-            getMethodParameterName(clazz.getMethods()[1]);
-        }
-        System.out.println(System.currentTimeMillis() - start);
-    }
-
-    public static void test(String test, String test2,String test3, String test4) {
-
-    }
-
     public static Map<String, Class> getMethodParameterName(Method method) {
-        Map<String, Class> paramsMap = Maps.newHashMap();
+        //因为参数顺序不可变，所以使用LinkedHashMap
+        Map<String, Class> paramsMap = Maps.newLinkedHashMap();
         try {
             Class clazz = method.getDeclaringClass();
             ClassPool pool = ClassPool.getDefault();
