@@ -22,6 +22,8 @@ import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import com.google.common.collect.Lists;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,150 +41,161 @@ import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 
 import javassist.CtMethod;
 import javassist.bytecode.MethodInfo;
+import net.myscloud.pandora.common.util.GsonUtil;
+import net.myscloud.pandora.mvc.bind.UrlBind;
+import net.myscloud.pandora.mvc.bind.annotation.response.Json;
+import net.myscloud.pandora.mvc.bind.method.MethodDetail;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HttpServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
-	private HttpRequest request;
-	/** Buffer that stores the response content */
-	private final StringBuilder buf = new StringBuilder();
+    private HttpRequest request;
+    /**
+     * Buffer that stores the response content
+     */
+    private final StringBuilder buf = new StringBuilder();
 
-	@Override
-	public void channelReadComplete(ChannelHandlerContext ctx) {
-		ctx.flush();
-	}
+    private static final Logger LOGGER = LogManager.getLogger();
 
-	private static void sendError(ChannelHandlerContext ctx,
-			HttpResponseStatus status) {
-		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
-				status, Unpooled.copiedBuffer("Failure: " + status + "\r\n",
-						CharsetUtil.UTF_8));
-		response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
 
-		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
-	}
+    private static void sendError(ChannelHandlerContext ctx,
+                                  HttpResponseStatus status) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                status, Unpooled.copiedBuffer("Failure: " + status + "\r\n",
+                CharsetUtil.UTF_8));
+        response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
 
-	@Override
-	protected void messageReceived(ChannelHandlerContext ctx, HttpRequest msg) {
-		if (msg instanceof HttpRequest) {
-			buf.setLength(0);
-			HttpRequest request = this.request = (HttpRequest) msg;
+        ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+    }
 
-			if (HttpHeaderUtil.is100ContinueExpected(request)) {
-				send100Continue(ctx);
-			}
+    @Override
+    protected void messageReceived(ChannelHandlerContext ctx, HttpRequest msg) {
+        if (msg instanceof HttpRequest) {
+            buf.setLength(0);
+            HttpRequest request = this.request = msg;
 
-			QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
-					request.uri());
-			CtMethod method = HttpServer.PATHMAP.get(queryStringDecoder.path());
-			if (method == null) {
-				sendError(ctx, HttpResponseStatus.NOT_FOUND);
-				return;
-			}
-			try {
-//				Path path = (Path)method.getAnnotation(Path.class);
-//				if (!path.method().getMethod().equals(request.method())) {
-//					sendError(ctx, HttpResponseStatus.BAD_REQUEST);
-//					return;
-//				}
-//				Map<String, List<String>> params = queryStringDecoder
-//						.parameters();
-//				MethodInfo methodInfo = method.getMethodInfo();
-				System.out.println();
-//				List<Object> paras = new ArrayList<Object>();
-//				for (Parameter parameter : parameters) {
-//					System.out.println(parameter.getType());
-//					if (parameter.getType().isArray()) {
-//						List<String> temp = params.get(parameter.getAnnotation(
-//								Param.class).value());
-//						String[] tempArray = new String[temp.size()];
-//						paras.add(temp.toArray(tempArray));
-//					} else {
-//						paras.add(params.get(
-//								parameter.getAnnotation(Param.class).value())
-//								.get(0));
-//					}
-//				}
-//				Object object = null;
-//				if (params.size() > 0) {
-//					object = method.getReturnType().cast(
-//							method.invoke(HttpServer.BEANMAP.get(method
-//									.getDeclaringClass().getName()),
-//									paras.get(0).toString(), paras.get(1)));
-//				} else {
-//					object = method.getReturnType().cast(
-//							method.invoke(HttpServer.BEANMAP.get(method
-//									.getDeclaringClass().getName())));
-//				}
-//				if (method.getAnnotation(Json.class) != null) {
-//					buf.append(GsonUtil.getGson().toJson(object));
-//				} else {
-//					buf.append(object);
-//				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			appendDecoderResult(buf, request);
-		}
+            if (HttpHeaderUtil.is100ContinueExpected(request)) {
+                send100Continue(ctx);
+            }
 
-		if (msg instanceof HttpContent) {
-			if (msg instanceof LastHttpContent) {
-				LastHttpContent trailer = (LastHttpContent) msg;
-				if (!writeResponse(trailer, ctx)) {
-					ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(
-							ChannelFutureListener.CLOSE);
+            QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
+                    request.uri());
+            MethodDetail methodDetail = UrlBind.getUrlMap().get(queryStringDecoder.path());
+            if (methodDetail == null) {
+                sendError(ctx, HttpResponseStatus.NOT_FOUND);
+                return;
+            }
+            try {
+                if (!methodDetail.getRequestMethod().getMethod().equals(request.method())) {
+                    sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
+                    return;
+                }
+                Map<String, List<String>> params = queryStringDecoder
+                        .parameters();
+
+                Map<String, Class> paramsMap = methodDetail.getParamsMap();
+
+                if (params.size() != paramsMap.size()) {
+                    sendError(ctx, HttpResponseStatus.BAD_REQUEST);
+                    return;
+                }
+
+                Object[] paras = new Object[params.size()];
+
+                Method method = methodDetail.getMethod();
+
+                int cursor =0;
+                for (Map.Entry<String, Class> entry : paramsMap.entrySet()) {
+                    List<String> temp = params.get(entry.getKey());
+                    if(entry.getValue().isArray()){
+                        String[] tempArray = new String[temp.size()];
+						paras[cursor]=temp.toArray(tempArray);
+                    }else {
+                        paras[cursor]=temp.get(0);
+                    }
+                    cursor++;
+                }
+
+                Object result = method.getReturnType().cast(method.invoke(HttpServer.factory.getInstance(methodDetail.getClassName()), paras));
+
+                if (method.getAnnotation(Json.class) != null) {
+					buf.append(GsonUtil.getGson().toJson(result));
+				} else {
+					buf.append(result);
 				}
-			}
-		}
-	}
 
-	private static void appendDecoderResult(StringBuilder buf, HttpObject o) {
-		DecoderResult result = o.decoderResult();
-		if (result.isSuccess()) {
-			return;
-		}
-		buf.append(".. WITH DECODER FAILURE: ");
-		buf.append(result.cause());
-		buf.append("\r\n");
-	}
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(),e);
+            }
+            appendDecoderResult(buf, request);
+        }
 
-	private boolean writeResponse(HttpObject currentObj,
-			ChannelHandlerContext ctx) {
-		// Decide whether to close the connection or not.
-		boolean keepAlive = HttpHeaderUtil.isKeepAlive(request);
-		// Build the response object.
-		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
-				currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
-				Unpooled.copiedBuffer(buf.toString(), CharsetUtil.UTF_8));
+        if (msg instanceof HttpContent) {
+            if (msg instanceof LastHttpContent) {
+                LastHttpContent trailer = (LastHttpContent) msg;
+                if (!writeResponse(trailer, ctx)) {
+                    ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(
+                            ChannelFutureListener.CLOSE);
+                }
+            }
+        }
+    }
 
-		response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
+    private static void appendDecoderResult(StringBuilder buf, HttpObject o) {
+        DecoderResult result = o.decoderResult();
+        if (result.isSuccess()) {
+            return;
+        }
+        buf.append(".. WITH DECODER FAILURE: ");
+        buf.append(result.cause());
+        buf.append("\r\n");
+    }
 
-		if (keepAlive) {
-			// Add 'Content-Length' header only for a keep-alive connection.
-			response.headers().setInt(CONTENT_LENGTH,
-					response.content().readableBytes());
-			// Add keep alive header as per:
-			// -
-			// http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
-			response.headers().set(CONNECTION, HttpHeaderValues.KEEP_ALIVE);
-		}
-		ctx.write(response);
-		return keepAlive;
-	}
+    private boolean writeResponse(HttpObject currentObj,
+                                  ChannelHandlerContext ctx) {
+        // Decide whether to close the connection or not.
+        boolean keepAlive = HttpHeaderUtil.isKeepAlive(request);
+        // Build the response object.
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
+                Unpooled.copiedBuffer(buf.toString(), CharsetUtil.UTF_8));
 
-	private static void send100Continue(ChannelHandlerContext ctx) {
-		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
-				CONTINUE);
-		ctx.write(response);
-	}
+        response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-		cause.printStackTrace();
-		ctx.close();
-	}
+        if (keepAlive) {
+            // Add 'Content-Length' header only for a keep-alive connection.
+            response.headers().setInt(CONTENT_LENGTH,
+                    response.content().readableBytes());
+            // Add keep alive header as per:
+            // -
+            // http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
+            response.headers().set(CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        }
+        ctx.write(response);
+        return keepAlive;
+    }
+
+    private static void send100Continue(ChannelHandlerContext ctx) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                CONTINUE);
+        ctx.write(response);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

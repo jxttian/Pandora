@@ -11,6 +11,7 @@ import java.util.Map;
 public class MethodDetail {
     private String url;
     private Method method;
+    private String className;
     private RequestMethod requestMethod;
     private Map<String, Class> paramsMap;
 
@@ -28,6 +29,14 @@ public class MethodDetail {
 
     public void setMethod(Method method) {
         this.method = method;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public RequestMethod getRequestMethod() {

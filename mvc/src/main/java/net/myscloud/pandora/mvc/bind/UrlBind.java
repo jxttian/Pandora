@@ -39,6 +39,7 @@ public final class UrlBind {
                 MethodDetail methodDetail = new MethodDetail();
                 methodDetail.setUrl(baseUrl + url);
                 methodDetail.setMethod(method);
+                methodDetail.setClassName(beanDefinition.getBeanName());
                 methodDetail.setRequestMethod(requestMethod);
                 methodDetail.setParamsMap(MethodUtil.getMethodParameterName(method));
                 urlMap.put(methodDetail.getUrl(),methodDetail);

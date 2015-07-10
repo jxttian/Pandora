@@ -4,6 +4,7 @@ import net.myscloud.pandora.core.annotation.Component;
 import net.myscloud.pandora.core.annotation.Injective;
 import net.myscloud.pandora.mvc.bind.annotation.Controller;
 import net.myscloud.pandora.mvc.bind.annotation.RequestMap;
+import net.myscloud.pandora.mvc.bind.annotation.response.Json;
 
 /**
  * Created by user on 2015/7/7.
@@ -15,8 +16,21 @@ public class Test2 {
     private Test test;
 
     @RequestMap("user")
-    public void test(String test,String test5,String test3,String test4){
+    @Json
+    public Pojo test(String test,String test5,String test3,String test4){
         System.out.println("do test2");
+        Pojo p = new Pojo();
+        p.setTest(test+test5+test3+test4);
+        return p;
+    }
+
+    @RequestMap("user/a")
+    @Json
+    public Pojo test(String test,String test5){
+        System.out.println("do test2a");
+        Pojo p = new Pojo();
+        p.setTest(test+test5);
+        return p;
     }
 
     public void test(){
