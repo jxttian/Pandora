@@ -23,7 +23,6 @@ import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import com.google.common.collect.Lists;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -42,12 +41,9 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 
-import javassist.CtMethod;
-import javassist.bytecode.MethodInfo;
 import net.myscloud.pandora.common.util.GsonUtil;
 import net.myscloud.pandora.mvc.bind.UrlBind;
 import net.myscloud.pandora.mvc.bind.annotation.response.Json;
@@ -116,14 +112,14 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpRequest> 
 
                 Method method = methodDetail.getMethod();
 
-                int cursor =0;
+                int cursor = 0;
                 for (Map.Entry<String, Class> entry : paramsMap.entrySet()) {
                     List<String> temp = params.get(entry.getKey());
-                    if(entry.getValue().isArray()){
+                    if (entry.getValue().isArray()) {
                         String[] tempArray = new String[temp.size()];
-						paras[cursor]=temp.toArray(tempArray);
-                    }else {
-                        paras[cursor]=temp.get(0);
+                        paras[cursor] = temp.toArray(tempArray);
+                    } else {
+                        paras[cursor] = temp.get(0);
                     }
                     cursor++;
                 }
@@ -131,13 +127,14 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpRequest> 
                 Object result = method.getReturnType().cast(method.invoke(HttpServer.factory.getInstance(methodDetail.getClassName()), paras));
 
                 if (method.getAnnotation(Json.class) != null) {
-					buf.append(GsonUtil.getGson().toJson(result));
-				} else {
-					buf.append(result);
-				}
+                    buf.append(GsonUtil.getGson().toJson(result));
+
+                } else {
+                    buf.append(result);
+                }
 
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
             appendDecoderResult(buf, request);
         }

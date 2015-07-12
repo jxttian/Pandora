@@ -7,13 +7,13 @@ import java.lang.annotation.*;
 
 
 /**
- * @ClassName: RequestMap
+ * @ClassName: Route
  * @Description: 
  */
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestMap {
+public @interface Route {
 	String value() default "";
 	RequestMethod method() default  RequestMethod.GET;
 	ResponseType responseType() default ResponseType.STRING;

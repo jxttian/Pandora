@@ -43,7 +43,7 @@ public final class HttpServer {
         UrlBind.init(factory);
         Map<String, MethodDetail> urlMap=UrlBind.getUrlMap();
         PandoraBootstrap boot = new PandoraBootstrap();
-        boot.bind(80).setBossQuantity(1).setWorkerQuantity(100).start();
+        boot.bind(8080).setBossQuantity(1).setWorkerQuantity(100).start();
 //        Test obj1= factory.getInstance("Test");
 //        obj1.test();
 //        Test2 obj2= factory.getInstance("Test2");

@@ -31,8 +31,7 @@ public class PackageUtil {
      * @param childPackage 是否遍历子包
      * @return 类的完整名称
      */
-    public static List<String> getClassName(String packageName,
-                                            boolean childPackage) {
+    public static List<String> getClassName(String packageName,boolean childPackage) {
         List<String> fileNames = null;
         ClassLoader loader = PackageUtil.class.getClassLoader();
         String packagePath = packageName.replace(StringUtil.PACKAGE_SEPARATOR_CHAR, StringUtil.FILE_SEPARATOR_CHAR);

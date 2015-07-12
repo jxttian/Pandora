@@ -1,9 +1,8 @@
 package net.myscloud.pandora.http.test;
 
-import net.myscloud.pandora.core.annotation.Component;
 import net.myscloud.pandora.core.annotation.Injective;
 import net.myscloud.pandora.mvc.bind.annotation.Controller;
-import net.myscloud.pandora.mvc.bind.annotation.RequestMap;
+import net.myscloud.pandora.mvc.bind.annotation.Route;
 import net.myscloud.pandora.mvc.bind.annotation.response.Json;
 
 /**
@@ -15,7 +14,7 @@ public class Test2 {
     @Injective
     private Test test;
 
-    @RequestMap("user")
+    @Route("user")
     @Json
     public Pojo test(String test,String test5,String test3,String test4){
         System.out.println("do test2");
@@ -24,7 +23,7 @@ public class Test2 {
         return p;
     }
 
-    @RequestMap("user/a")
+    @Route("user/a")
     @Json
     public Pojo test(String test,String test5){
         System.out.println("do test2a");
