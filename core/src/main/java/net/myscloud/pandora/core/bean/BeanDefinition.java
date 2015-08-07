@@ -4,6 +4,7 @@ package net.myscloud.pandora.core.bean;
  * Created by user on 2015/7/6.
  */
 public class BeanDefinition {
+
     private String beanName;
     private Class beanClass;
     private Object instance;

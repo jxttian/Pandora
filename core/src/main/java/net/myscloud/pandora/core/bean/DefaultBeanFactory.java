@@ -8,12 +8,15 @@ import net.myscloud.pandora.common.util.StringUtil;
 import net.myscloud.pandora.core.annotation.Component;
 import net.myscloud.pandora.core.annotation.Injective;
 import net.myscloud.pandora.core.exception.BeanRegisterException;
+import net.myscloud.pandora.core.resource.ClassPathClassReader;
+import net.myscloud.pandora.core.resource.ClassReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by user on 2015/7/6.
@@ -73,19 +76,17 @@ public class DefaultBeanFactory {
         Preconditions.checkArgument(StringUtil.isNotEmpty(basePackage), "basePackage must not be empty");
         if (factory == null) {
             factory = new DefaultBeanFactory();
-            List<String> classNames = PackageUtil.getClassName(basePackage);
-            classNames.parallelStream().forEach(item -> {
+            ClassReader classReader = new ClassPathClassReader();
+            Set<Class<?>> clazzes = classReader.getClass(basePackage, true);
+            clazzes.parallelStream().forEach(clazz -> {
                 try {
-                    Class cls = Class.forName(item);
-                    if (AnnotationUtil.hasAnnotation(cls, Component.class)) {
+                    if (AnnotationUtil.hasAnnotation(clazz, Component.class) && !clazz.isAnnotation()) {
                         BeanDefinition bd = new BeanDefinition();
-                        bd.setBeanName(cls.getSimpleName());
-                        bd.setBeanClass(cls);
-                        bd.setInstance(cls.newInstance());
-                        factory.registerBean(cls.getSimpleName(), bd);
+                        bd.setBeanName(clazz.getSimpleName());
+                        bd.setBeanClass(clazz);
+                        bd.setInstance(clazz.newInstance());
+                        factory.registerBean(clazz.getSimpleName(), bd);
                     }
-                } catch (ClassNotFoundException e) {
-                    LOGGER.error(e.getMessage(), e);
                 } catch (BeanRegisterException e) {
                     LOGGER.error(e.getMessage(), e);
                 } catch (InstantiationException e) {
