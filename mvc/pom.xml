@@ -15,7 +15,7 @@
         <dependency>
             <groupId>net.myscloud</groupId>
             <artifactId>pandora.core</artifactId>
-            <version>${pandora-version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
