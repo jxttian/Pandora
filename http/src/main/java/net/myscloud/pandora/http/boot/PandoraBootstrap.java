@@ -9,7 +9,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import net.myscloud.pandora.core.boot.Bootstrap;
 import net.myscloud.pandora.http.server.HttpServerInitializer;
-import net.myscloud.pandora.mvc.bind.UrlBind;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -12,10 +12,15 @@
     <artifactId>pandora.mvc</artifactId>
 
     <dependencies>
+        <!-- Main -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>net.myscloud</groupId>
             <artifactId>pandora.core</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
